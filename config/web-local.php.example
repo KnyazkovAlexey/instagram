@@ -1,0 +1,9 @@
+<?php
+
+return [
+    'components' => [
+        'request' => [
+            'cookieValidationKey' => 'd9RswCc3DDMCV09UWDqlICwmc5abMTMO',
+        ],
+    ],
+];
