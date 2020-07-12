@@ -5,7 +5,6 @@ namespace app\models\forms;
 use app\services\InstagramPostsService;
 use InstagramScraper\Model\Media;
 use yii\base\Model;
-use Throwable;
 use Yii;
 
 /**
@@ -28,7 +27,7 @@ class InstagramPostsSearch extends Model
     public function rules(): array
     {
         return [
-            [['loginsStr'], 'string', 'max' => 150,'tooLong' => Yii::t('app', 'Максимум 150 символлов.')],
+            [['loginsStr'], 'string', 'max' => 150,'tooLong' => Yii::t('app', 'Максимум 150 символов.')],
             [['loginsStr'], 'required', 'message' => Yii::t('app', 'Укажите хотя бы один аккаунт.')],
         ];
     }
@@ -42,11 +41,7 @@ class InstagramPostsSearch extends Model
     public function search(array $params): array
     {
         if ($this->load($params) && $this->validate() && $this->sanitize()) {
-            try {
-                return (new InstagramPostsService())->getLastPosts($this->loginsList);
-            } catch (Throwable $e) {
-                Yii::error($e->getMessage());
-            }
+            return (new InstagramPostsService())->getLastPosts($this->loginsList);
         }
 
         return [];

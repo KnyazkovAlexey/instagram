@@ -46,7 +46,6 @@ class InstagramPostsService
      * @param string[] $logins Массив логинов Instagram.
      * @param int $postsCount Необходимое количество постов.
      * @return Media[]
-     * @throws Throwable;
      */
     public function getLastPosts(array $logins = [], int $postsCount = 10): array
     {
@@ -71,7 +70,6 @@ class InstagramPostsService
      * @param string $login Логин Instagram.
      * @param int $postsCount Необходимое количество постов.
      * @return Media[]
-     * @throws Throwable
      */
     protected function getUserLastPosts(string $login, int $postsCount): array
     {
@@ -88,7 +86,10 @@ class InstagramPostsService
             /** Ничего страшного, если аккаунт не нашёлся. */
             $userPosts = [];
         } catch (Throwable $e) {
-            throw $e;
+            /** Всё остальное стоит логировать. */
+            Yii::error($e->getMessage());
+
+            $userPosts = [];
         }
 
         $this->setUserLastPostsCache($login, $userPosts);
@@ -104,7 +105,7 @@ class InstagramPostsService
      */
     protected function getUserLastPostsCache(string $login)
     {
-        return Yii::$app->cache->get($this->getUserLastPostsCacheKey($login));
+        return Yii::$app->cache->get($this->getCacheKey($login));
     }
 
     /**
@@ -116,7 +117,7 @@ class InstagramPostsService
      */
     protected function setUserLastPostsCache(string $login, array $userPosts): bool
     {
-        return Yii::$app->cache->set($this->getUserLastPostsCacheKey($login), $userPosts, self::CACHE['LIFETIME']);
+        return Yii::$app->cache->set($this->getCacheKey($login), $userPosts, self::CACHE['LIFETIME']);
     }
 
     /**
@@ -125,7 +126,7 @@ class InstagramPostsService
      * @param string $login Логин Instagram.
      * @return string
      */
-    protected function getUserLastPostsCacheKey(string $login): string
+    protected function getCacheKey(string $login): string
     {
         return self::CACHE['KEY_PREFIX'] . $login;
     }
