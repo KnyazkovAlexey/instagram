@@ -61,7 +61,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return Yii::$app->getResponse()->redirect('/instagram-posts');
+        return $this->render('index');
     }
 
     /**

@@ -30,7 +30,14 @@ class InstagramPostsService
      */
     public function __construct()
     {
-        $this->instagramApi = new Instagram();
+        /** Локально можно использовать $this->instagramApi = new Instagram(); и не логиниться. */
+        $this->instagramApi = Instagram::withCredentials(
+            Yii::$app->params['instagram']['username'],
+            Yii::$app->params['instagram']['password'],
+            new InstagramCache(),
+        );
+
+        $this->instagramApi->login();
     }
 
     /**

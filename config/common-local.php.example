@@ -8,4 +8,10 @@ return [
             'password' => '',
         ],
     ],
+    'params' => [
+        'instagram' => [
+            'username' => 'test',
+            'password' => 'test',
+        ],
+    ],
 ];
