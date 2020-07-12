@@ -22,7 +22,7 @@ class InstagramPostsService
         'LIFETIME' => 10 * 60, //Время жизни в секундах.
     ];
 
-    /** @var Instagram $instagramApi Сервис для работы с API Instagram. */
+    /** @var Instagram $instagramApi Сервис для парсинга сайта instagram.com */
     protected Instagram $instagramApi;
 
     /**
@@ -87,7 +87,7 @@ class InstagramPostsService
             $userPosts = [];
         } catch (Throwable $e) {
             /** Всё остальное стоит логировать. */
-            Yii::error($e->getMessage());
+            Yii::error('Ошибка при парсинге постов юзера "' . $login . '". '. $e->getMessage());
 
             $userPosts = [];
         }
