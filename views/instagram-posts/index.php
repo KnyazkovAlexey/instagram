@@ -38,7 +38,7 @@ $this->title = Yii::t('app', 'Посты Instagram');
 <br>
 
 <?php if (empty($posts)): ?>
-    <?= Yii::t('app', 'Ничего не найдено.') ?>
+    <p id="empty-table-note"><?= Yii::t('app', 'Ничего не найдено.') ?></p>
 <?php endif; ?>
 
 <?php foreach ($posts as $post): ?>
@@ -73,6 +73,7 @@ $this->registerJs('
     /** Даём обратную связь, что надо подождать, пока список обновится */
     $("body").on("submit", "#search-form", function() {
         $("#search-button").prop("disabled", true).text("Ждите...");
+        $("#empty-table-note").hide();
     });
 ', View::POS_READY);
 ?>
