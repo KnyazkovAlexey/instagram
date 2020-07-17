@@ -2,7 +2,7 @@
 
 namespace app\controllers;
 
-use app\models\forms\InstagramPostsSearch;
+use app\models\search\InstagramPostsSearch;
 use InstagramScraper\Model\Media;
 use yii\web\Controller;
 use Yii;

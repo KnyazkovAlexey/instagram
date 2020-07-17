@@ -3,7 +3,7 @@
 use yii\web\View;
 use InstagramScraper\Model\Media;
 use yii\widgets\ActiveForm;
-use app\models\forms\InstagramPostsSearch;
+use app\models\search\InstagramPostsSearch;
 use yii\widgets\Pjax;
 
 /**

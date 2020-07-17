@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models\forms;
+namespace app\models\search;
 
 use app\services\InstagramPostsService;
 use InstagramScraper\Model\Media;
@@ -8,18 +8,18 @@ use yii\base\Model;
 use Yii;
 
 /**
- * Форма для фильтрации списка постов Instagram.
+ * Модель для поиска постов Instagram.
  *
  * Class InstagramPostsSearch
- * @package app\models\forms
+ * @package app\models\search
  */
 class InstagramPostsSearch extends Model
 {
-    /** @var string $loginsStr Строка с логинами Instagram через запятую. */
-    public $loginsStr;
+    /** @var string|null $loginsStr Строка с логинами Instagram через запятую. */
+    public ?string $loginsStr = null;
 
-    /** @var string[] $loginsList Массив логинов Instagram. */
-    protected $loginsList;
+    /** @var string[] $logins Массив логинов Instagram. */
+    protected array $logins = [];
 
     /**
      * @inheritDoc
@@ -41,7 +41,7 @@ class InstagramPostsSearch extends Model
     public function search(array $params): array
     {
         if ($this->load($params) && $this->validate() && $this->sanitize()) {
-            return (new InstagramPostsService())->getLastPosts($this->loginsList);
+            return (new InstagramPostsService())->getLastPosts($this->logins);
         }
 
         return [];
@@ -60,10 +60,10 @@ class InstagramPostsSearch extends Model
         /** Удаляем лишние запятые. */
         $this->loginsStr = preg_replace('~,{2,}~', ',', $this->loginsStr);
 
-        $this->loginsList = array_unique(array_filter(explode(',', $this->loginsStr)));
+        $this->logins = array_unique(array_filter(explode(',', $this->loginsStr)));
 
         /** Удаляем дубликаты. */
-        $this->loginsStr = implode(',', $this->loginsList);
+        $this->loginsStr = implode(',', $this->logins);
 
         return true;
     }
