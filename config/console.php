@@ -1,7 +1,7 @@
 <?php
 
 $config = [
-    'id' => 'files-console',
+    'id' => 'instagram-console',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'app\commands',
     'components' => [

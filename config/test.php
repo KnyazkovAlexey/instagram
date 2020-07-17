@@ -9,7 +9,7 @@ $params = yii\helpers\ArrayHelper::merge(
  * Application configuration shared by all test types
  */
 return [
-    'id' => 'files-tests',
+    'id' => 'instagram-tests',
     'timeZone' => 'Europe/Moscow',
     'language' => 'ru-RU',
     'basePath' => dirname(__DIR__),
