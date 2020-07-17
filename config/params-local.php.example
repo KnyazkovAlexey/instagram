@@ -1,0 +1,8 @@
+<?php
+
+return [
+    'instagram' => [
+        'username' => 'test',
+        'password' => 'test',
+    ],
+];

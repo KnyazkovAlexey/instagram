@@ -1,7 +1,7 @@
 <?php
 
 $config = [
-    'id' => 'instagram',
+    'id' => 'files',
     'components' => [
         'user' => [
             'identityClass' => 'app\models\User',

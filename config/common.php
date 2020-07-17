@@ -1,5 +1,10 @@
 <?php
 
+$params = yii\helpers\ArrayHelper::merge(
+    require(__DIR__ . '/params.php'),
+    require(__DIR__ . '/params-local.php'),
+);
+
 $config = [
     'language' => 'ru-RU',
     'timeZone' => 'Europe/Moscow',
@@ -8,7 +13,6 @@ $config = [
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
-        '@admin' => '@app/modules/admin',
     ],
     'components' => [
         'db' => [
@@ -28,11 +32,7 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
     ],
-    'params' => [
-        'adminEmail' => 'admin@example.com',
-        'senderEmail' => 'noreply@example.com',
-        'senderName' => 'Example.com mailer',
-    ],
+    'params' => $params,
 ];
 
 if (YII_ENV_DEV) {
