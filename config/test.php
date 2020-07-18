@@ -31,6 +31,9 @@ return [
         'urlManager' => [
             'showScriptName' => true,
         ],
+        'cache' => [
+            'class' => 'yii\caching\FileCache',
+        ],
         'user' => [
             'identityClass' => 'app\models\User',
         ],
