@@ -12,6 +12,8 @@ use Yii;
  *
  * Class InstagramPostsSearch
  * @package app\models\search
+ *
+ * @property string[] $logins Массив логинов Instagram.
  */
 class InstagramPostsSearch extends Model
 {
@@ -27,9 +29,21 @@ class InstagramPostsSearch extends Model
     public function rules(): array
     {
         return [
-            [['loginsStr'], 'string', 'max' => 150,'tooLong' => Yii::t('app', 'Максимум 150 символов.')],
+            [['loginsStr'], 'string', 'max' => 150, 'tooLong' => Yii::t('app', 'Максимум 150 символов.')],
             [['loginsStr'], 'required', 'message' => Yii::t('app', 'Укажите хотя бы один аккаунт.')],
+            [['loginsStr'], 'match', 'pattern' => '~[A-Za-z]~',
+                'message' => Yii::t('app', 'Укажите хотя бы один аккаунт.')],
+            [['loginsStr'], 'match', 'pattern' => '~^[A-Za-z0-9,_\.\s]+$~',
+                'message' => Yii::t('app', 'Недопустимые символы в списке аккаунтов.')],
         ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function formName(): string
+    {
+        return 'search';
     }
 
     /**
@@ -52,7 +66,7 @@ class InstagramPostsSearch extends Model
      *
      * @return bool
      */
-    protected function sanitize(): bool
+    public function sanitize(): bool
     {
         /** Удаляем пробелы и лишние запятые. */
         $this->loginsStr = preg_replace(['~\s~', '~^,+~', '~,+$~'], '', $this->loginsStr);
@@ -66,5 +80,15 @@ class InstagramPostsSearch extends Model
         $this->loginsStr = implode(',', $this->logins);
 
         return true;
+    }
+
+    /**
+     * Массив логинов Instagram.
+     *
+     * @return string[]
+     */
+    public function getLogins(): array
+    {
+        return $this->logins;
     }
 }
