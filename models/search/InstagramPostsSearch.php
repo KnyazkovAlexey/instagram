@@ -74,9 +74,10 @@ class InstagramPostsSearch extends Model
         /** Удаляем лишние запятые. */
         $this->loginsStr = preg_replace('~,{2,}~', ',', $this->loginsStr);
 
+        /** Бьём по запятой, удаляем дубликаты и пустышки. */
         $this->logins = array_unique(array_filter(explode(',', $this->loginsStr)));
 
-        /** Удаляем дубликаты. */
+        /** Склеиваем назад очищенный массив. */
         $this->loginsStr = implode(',', $this->logins);
 
         return true;
