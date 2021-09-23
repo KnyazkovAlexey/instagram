@@ -7,30 +7,24 @@ use InstagramScraper\Exception\InstagramNotFoundException;
 use InstagramScraper\Model\Media;
 use Throwable;
 use Yii;
+use Iterator;
 
 /**
  * Сервис для получения постов Instagram.
- *
- * Class InstagramPostsService
- * @package app\services
  */
 class InstagramPostsService
 {
-    /** @var string Настройки кэширования постов. */
-    protected const CACHE = [
-        'KEY_PREFIX' => 'instagram_last_posts.', //Префикс ключей.
-        'LIFETIME' => 10 * 60, //Время жизни в секундах.
-    ];
+    /** @var string Префикс ключей для кэша постов. */
+    protected const CACHE_KEY_PREFIX = 'instagram_last_posts.';
+    /** @var int Время жизни кэша постов (в секундах). */
+    protected const CACHE_LIFETIME = 10 * 60;
 
     /** @var Instagram $instagramApi Сервис для парсинга сайта instagram.com */
     protected Instagram $instagramApi;
 
-    /**
-     * InstagramService constructor.
-     */
     public function __construct()
     {
-        /** Локально можно использовать $this->instagramApi = new Instagram(); и не логиниться. */
+        //Локально можно использовать $this->instagramApi = new Instagram(); и не логиниться.
         $this->instagramApi = Instagram::withCredentials(
             Yii::$app->params['instagram']['username'],
             Yii::$app->params['instagram']['password'],
@@ -38,6 +32,7 @@ class InstagramPostsService
         );
 
         $this->instagramApi->login();
+        $this->instagramApi->saveSession();
     }
 
     /**
@@ -45,23 +40,20 @@ class InstagramPostsService
      *
      * @param string[] $logins Массив логинов Instagram.
      * @param int $postsCount Необходимое количество постов.
-     * @return Media[]
+     * @return Media[]|Iterator
      */
-    public function getLastPosts(array $logins = [], int $postsCount = 10): array
+    public function getLastPosts(array $logins = [], int $postsCount = 10): Iterator
     {
-        /** @var Media[] $posts */
-        $posts = [];
+        /** @var Iterator Используем кучу (вместо array_merge и usort), чтобы оптимизировать расход памяти */
+        $posts = new InstagramPostsHeap($postsCount);
 
         foreach ($logins as $login) {
-            $posts = array_merge($posts, $this->getUserLastPosts($login, $postsCount));
+            foreach ($this->getUserLastPosts($login, $postsCount) as $post) {
+                $posts->insert($post);
+            }
         }
 
-        /** Сортировка постов по дате создания. */
-        usort($posts, function (Media $post1, Media $post2) {
-            return $post2->getCreatedTime() <=> $post1->getCreatedTime();
-        });
-
-        return array_slice($posts, 0, $postsCount);
+        return $posts;
     }
 
     /**
@@ -83,10 +75,10 @@ class InstagramPostsService
         try {
             $userPosts = $this->instagramApi->getMedias($login, $postsCount);
         } catch (InstagramNotFoundException $e) {
-            /** Ничего страшного, если аккаунт не нашёлся. */
+            //Ничего страшного, если аккаунт не нашёлся.
             $userPosts = [];
         } catch (Throwable $e) {
-            /** Всё остальное стоит логировать. */
+            //Всё остальное стоит логировать.
             Yii::error('Ошибка при парсинге постов юзера "' . $login . '". '. $e->getMessage());
 
             $userPosts = [];
@@ -117,7 +109,7 @@ class InstagramPostsService
      */
     protected function setUserLastPostsCache(string $login, array $userPosts): bool
     {
-        return Yii::$app->cache->set($this->getCacheKey($login), $userPosts, self::CACHE['LIFETIME']);
+        return Yii::$app->cache->set($this->getCacheKey($login), $userPosts, self::CACHE_LIFETIME);
     }
 
     /**
@@ -128,6 +120,6 @@ class InstagramPostsService
      */
     protected function getCacheKey(string $login): string
     {
-        return self::CACHE['KEY_PREFIX'] . $login;
+        return self::CACHE_KEY_PREFIX . $login;
     }
 }

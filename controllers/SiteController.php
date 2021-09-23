@@ -57,11 +57,11 @@ class SiteController extends Controller
     /**
      * Displays homepage.
      *
-     * @return string
+     * @return Response
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        return Yii::$app->response->redirect(['instagram-posts']);
     }
 
     /**

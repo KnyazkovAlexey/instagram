@@ -6,6 +6,7 @@ use app\services\InstagramPostsService;
 use InstagramScraper\Model\Media;
 use yii\base\Model;
 use Yii;
+use Iterator;
 
 /**
  * Модель для поиска постов Instagram.
@@ -50,9 +51,9 @@ class InstagramPostsSearch extends Model
      * Поиск постов Instagram.
      *
      * @param array $params
-     * @return Media[]
+     * @return Media[]|Iterator
      */
-    public function search(array $params): array
+    public function search(array $params)
     {
         if ($this->load($params) && $this->validate() && $this->sanitize()) {
             return (new InstagramPostsService())->getLastPosts($this->logins);

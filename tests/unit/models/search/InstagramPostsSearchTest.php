@@ -7,9 +7,6 @@ use app\tests\TestCase;
 
 /**
  * Тестирование модели для поиска постов Instagram.
- *
- * Class InstagramPostsSearchTest
- * @package app\tests\unit\models\search
  */
 class InstagramPostsSearchTest extends TestCase
 {
@@ -18,7 +15,6 @@ class InstagramPostsSearchTest extends TestCase
      */
     public function testSuccess()
     {
-        /** @var InstagramPostsSearch $search */
         $search = new InstagramPostsSearch([
             'loginsStr' => implode(',', $this->faker->words),
         ]);
@@ -31,7 +27,6 @@ class InstagramPostsSearchTest extends TestCase
      */
     public function testSanitizing()
     {
-        /** @var InstagramPostsSearch $search */
         $search = new InstagramPostsSearch([
             'loginsStr' => '    leomessi, cristiano,leomessi,  ',
         ]);
@@ -49,7 +44,6 @@ class InstagramPostsSearchTest extends TestCase
      */
     public function testEmptyLogins()
     {
-        /** @var InstagramPostsSearch $search */
         $search = new InstagramPostsSearch([
             'loginsStr' => '',
         ]);
@@ -62,7 +56,6 @@ class InstagramPostsSearchTest extends TestCase
      */
     public function testWrongChars()
     {
-        /** @var InstagramPostsSearch $search */
         $search = new InstagramPostsSearch([
             'loginsStr' => '<!!!>',
         ]);
@@ -75,10 +68,8 @@ class InstagramPostsSearchTest extends TestCase
      */
     public function testWrongLength()
     {
-        /** @var string $loginsStr */
         $loginsStr = str_repeat($this->faker->lexify('?????????,'), 16);
 
-        /** @var InstagramPostsSearch $search */
         $search = new InstagramPostsSearch([
             'loginsStr' => $loginsStr,
         ]);

@@ -5,6 +5,7 @@ use InstagramScraper\Model\Media;
 use yii\widgets\ActiveForm;
 use app\models\search\InstagramPostsSearch;
 use yii\widgets\Pjax;
+use yii\helpers\Html;
 
 /**
  * @var Media[] $posts
@@ -44,8 +45,8 @@ $this->title = Yii::t('app', 'Посты Instagram');
 <?php foreach ($posts as $post): ?>
     <?= date('d.m.Y H:i', $post->getCreatedTime()) ?>
 
-    <a href="https://www.instagram.com/<?= $post->getOwner()->getUsername() ?>" target="_blank">
-        <?= $post->getOwner()->getUsername() ?>
+    <a href="https://www.instagram.com/<?= Html::encode($post->getOwner()->getUsername()) ?>" target="_blank">
+        <?= Html::encode($post->getOwner()->getUsername()) ?>
     </a><br>
 
     <a href="<?= $post->getLink() ?>" target="_blank">
@@ -53,7 +54,7 @@ $this->title = Yii::t('app', 'Посты Instagram');
     </a>
 
     <p>
-        <?= $post->getCaption() ?>
+        <?= Html::encode($post->getCaption()) ?>
     </p><br>
 <?php endforeach; ?>
 
